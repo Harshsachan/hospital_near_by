@@ -34,17 +34,24 @@ class SignInPage extends StatelessWidget {
               _showLoginErrorDialog(context, state.message);
             }
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SignInButton(
-                Buttons.googleDark,
-                text: 'Sign up with Google',
-                onPressed: () {
-                  context.read<AuthBloc>().add(AuthLoggedIn());
-                },
-              ),
-            ],
+          child: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              if (state is AuthLoading) {
+                return CircularProgressIndicator();
+              }
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SignInButton(
+                    Buttons.googleDark,
+                    text: 'Sign up with Google',
+                    onPressed: () {
+                      context.read<AuthBloc>().add(AuthLoggedIn());
+                    },
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

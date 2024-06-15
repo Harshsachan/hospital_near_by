@@ -25,6 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onAuthLoggedIn(AuthLoggedIn event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
     try {
       final user = await _firebaseServices.signInWithGoogle();
       if (user != null) {

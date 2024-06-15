@@ -9,7 +9,7 @@ class AuthChecker extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state is AuthInitial) {
+        if (state is AuthInitial || state is AuthLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is AuthSuccess) {
           return HomePage(user: state.user);
