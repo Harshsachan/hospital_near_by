@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hospital_near_by/screens/sign_in.dart';
-import 'package:hospital_near_by/services/google_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hospital_near_by/bloc/auth_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatelessWidget {
   final User user;
@@ -16,11 +16,8 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseServices().signOut();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => SignInPage()),
-              );
+            onPressed: () {
+              context.read<AuthBloc>().add(AuthLoggedOut());
             },
           ),
         ],

@@ -1,19 +1,17 @@
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hospital_near_by/screens/home_page.dart';
-import 'package:hospital_near_by/services/google_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hospital_near_by/bloc/auth_bloc.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
 
-  void _showLoginErrorDialog(BuildContext context) {
+  void _showLoginErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Error'),
-        content: Text('Unable to login'),
+        content: Text(message),
         actions: [
           TextButton(
             onPressed: () {
@@ -26,41 +24,30 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  void _navigateToHomePage(BuildContext context, User user) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => HomePage(user: user),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SignInButton(
-              Buttons.googleDark,
-              text: 'Sign up with Google',
-              onPressed: () async {
-                try {
-                  User? user = await FirebaseServices().signInWithGoogle();
-                  if (user != null) {
-                    _navigateToHomePage(context, user);
-                  } else {
-                    _showLoginErrorDialog(context);
-                  }
-                } catch (e) {
-                  _showLoginErrorDialog(context);
-                }
-              },
-            ),
-          ],
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthError) {
+              _showLoginErrorDialog(context, state.message);
+            }
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SignInButton(
+                Buttons.googleDark,
+                text: 'Sign up with Google',
+                onPressed: () {
+                  context.read<AuthBloc>().add(AuthLoggedIn());
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
