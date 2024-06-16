@@ -27,6 +27,7 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.pink.shade100,
       body: Center(
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
@@ -42,6 +43,9 @@ class SignInPage extends StatelessWidget {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Text("Sign IN / Sign UP",style: TextStyle(fontSize: 20),),
+                  Text("Using Google",style: TextStyle(fontSize: 20),),
+                  Divider(),
                   SignInButton(
                     Buttons.googleDark,
                     text: 'Sign up with Google',
